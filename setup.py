@@ -23,14 +23,14 @@ def requirements():
         return req.read().splitlines()
 
 
-setup(name='suprabackup',
+setup(name='Suprabackup',
       version='0.1',
-      description='Suprabackup is a tool to automate xtrabackup db backups'
+      description='Suprabackup is a tool to automate xtrabackup db backups',
       long_description=readme(),
       license='MIT',
-      url='https://github.com/quanta-computing/suprabackup'
+      url='https://github.com/quanta-computing/suprabackup',
       author="Matthieu 'Korrigan' Rosinski",
-      author_email='mro@quanta-computing.com'
+      author_email='mro@quanta-computing.com',
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Programming Language :: Python',
