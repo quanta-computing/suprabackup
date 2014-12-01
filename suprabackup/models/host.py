@@ -8,6 +8,7 @@ from sqlalchemy import Integer, String
 from sqlalchemy.orm import relationship, backref
 
 from .base import Model
+from .job import Job
 
 
 class Host(Model):
@@ -25,3 +26,36 @@ class Host(Model):
     schedule_id = Column(Integer, ForeignKey('schedules.id'))
     schedule = relationship('Schedule', backref='hosts')
     jobs = relationship('Job', backref='host')
+
+
+    @property
+    def last_long_job(self):
+        """
+        Get the last long job
+
+        """
+        jobs = self.jobs.filter(Job.type == Job.LONG).order_by(Job.end_time)
+        if len(jobs):
+            return jobs[0]
+        return None
+
+
+    def new_job(start_time=None, path=''):
+        """
+        Create a job instance with correct parameters and return it
+
+        """
+        import datetime
+
+        if not start_time:
+            start_time = datetime.datetime.now()
+        last_long = self.last_long_job
+        job = Job(host=self, start_time=start_time, file_path=path)
+        if not last_long:
+            job.type = Job.LONG
+        else:
+            next_long = last_long.end_time
+            next_long += datetime.timedelta(hours=self.schedule.long_interval)
+            if next_long > start_time:
+                job.type = Job.LONG
+        return job

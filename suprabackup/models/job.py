@@ -43,10 +43,10 @@ class Job(Model):
     __tablename__ = 'jobs'
 
     id = Column(Integer, primary_key=True)
-    type = Column(SmallInteger)
+    type = Column(SmallInteger, default=SHORT)
     host_id = Column(Integer, ForeignKey('hosts.id'))
     file_path = Column(String(255))
-    status = Column(Integer)
+    status = Column(Integer, default=JobStatus.UNKNOWN)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
     expires = Column(DateTime)
