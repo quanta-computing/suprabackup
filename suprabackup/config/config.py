@@ -9,6 +9,8 @@ class SupraConfig(dict):
     It is a simple dict with few helpers
 
     """
+    def __init__(self):
+        self.file = None
 
     @classmethod
     def from_file(klass, path, defaults=None):
@@ -29,4 +31,5 @@ class SupraConfig(dict):
             if config is None:
                 config = {}
             c.update(config)
+        c.file = path
         return c
