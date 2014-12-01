@@ -24,4 +24,4 @@ class Host(Model):
     ip = Column(String(IP_MAX_LENGTH))
     schedule_id = Column(Integer, ForeignKey('schedules.id'))
     schedule = relationship('Schedule', backref='hosts')
-    jobs = relationshil('Job', backref='host')
+    jobs = relationship('Job', backref='host')
