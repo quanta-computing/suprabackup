@@ -7,7 +7,7 @@ from .config import SupraConfig
 DEFAULT_CONFIG_PATH = '/etc/suprabackup/config.yml'
 
 
-def load_config(path=DEFAULT_CONFIG_PATH, role=None, overrides=None):
+def load_config(role=None, overrides=None, path=DEFAULT_CONFIG_PATH):
     """
     Loads the configuration from a config file using the defaults as fallback
     `overrides allows to override some config options`
