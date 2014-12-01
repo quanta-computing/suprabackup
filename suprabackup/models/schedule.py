@@ -1,5 +1,5 @@
 """
-This moduel contains classes and helpers about backup schedule
+This module contains classes and helpers about backup schedule
 
 """
 
