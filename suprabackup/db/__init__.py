@@ -24,7 +24,7 @@ def connect_engine(engine):
     Get a session from an engine
 
     """
-    return sessionmaker(bind=engine)
+    return sessionmaker(bind=engine)()
 
 
 def connect(engine, host, db, user, password=''):
