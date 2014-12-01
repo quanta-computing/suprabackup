@@ -8,6 +8,29 @@ from sqlalchemy import Integer, SmallInteger, String, DateTime
 from .base import Model
 
 
+class JobStatus:
+    """
+    A simple class to validate Job status
+
+    """
+    UNKNOWN = 0
+    IN_PROGRESS = 1
+    DONE = 2
+    VERIFIED = 3
+    FAILED = 4
+
+    @classmethod
+    def is_valid(klass, status=0):
+        """
+        Returns True if status corresponds to valid status
+
+        """
+        if status >= klass.UNKNOWN and status <= klass.FAILED:
+            return True
+        return False
+
+
+
 class Job(Model):
     """
     This is the ORM mapping for a single backup job
