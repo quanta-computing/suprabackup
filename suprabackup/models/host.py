@@ -25,7 +25,7 @@ class Host(Model):
     ip = Column(String(IP_MAX_LENGTH))
     schedule_id = Column(Integer, ForeignKey('schedules.id'))
     schedule = relationship('Schedule', backref='hosts')
-    jobs = relationship('Job', backref='host')
+    jobs = relationship('Job', backref='host', lazy='dynamic')
 
 
     @property
@@ -34,13 +34,14 @@ class Host(Model):
         Get the last long job
 
         """
-        jobs = self.jobs.filter(Job.type == Job.LONG).order_by(Job.end_time)
-        if len(jobs):
-            return jobs[0]
-        return None
+        jobs = self.jobs.filter(Job.type == Job.LONG).order_by(Job.end_time.desc())
+        if jobs.count:
+            return jobs.first()
+        else:
+            return None
 
 
-    def new_job(start_time=None, path=''):
+    def new_job(self, start_time=None, path=''):
         """
         Create a job instance with correct parameters and return it
 
@@ -56,6 +57,6 @@ class Host(Model):
         else:
             next_long = last_long.end_time
             next_long += datetime.timedelta(hours=self.schedule.long_interval)
-            if next_long > start_time:
+            if start_time > next_long:
                 job.type = Job.LONG
         return job
