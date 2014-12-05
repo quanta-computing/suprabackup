@@ -49,4 +49,16 @@ class Job(Model):
     status = Column(Integer, default=JobStatus.UNKNOWN)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    expires = Column(DateTime)
+
+
+    def end(self, end_time=None):
+        """
+        Ends the job and set the different parameters accordingly
+
+        """
+        import datetime
+
+        self.status = JobStatus.DONE
+        if not end_time:
+            end_time = datetime.datetime.now()
+        self.end_time = end_time
