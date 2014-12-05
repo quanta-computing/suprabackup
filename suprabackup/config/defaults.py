@@ -8,7 +8,7 @@ __defaults__ = {
     'receive': {
         'base_path': '/tmp',
         'file_prefix': 'xtrabackup',
-        'default_read_size': 32768,
+        'read_size': 32768,
         'database': {},
     },
     'verify': {},
