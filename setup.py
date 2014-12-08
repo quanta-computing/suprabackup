@@ -4,6 +4,7 @@ Setup script for suprabackup
 """
 
 from setuptools import setup
+from setuptools import find_packages
 
 
 def readme():
@@ -25,7 +26,7 @@ def requirements():
 
 
 setup(name='suprabackup',
-      version='0.1.1',
+      version='0.1.2',
       description='Suprabackup is a tool to automate xtrabackup database backups',
       long_description=readme(),
       license='MIT',
@@ -39,7 +40,7 @@ setup(name='suprabackup',
           'Topic :: Database',
           'Topic :: System :: Archiving :: Backup',
       ],
-      packages=['suprabackup'],
+      packages=find_packages(),
       entry_points = {
         'console_scripts': [
             'suprabackup-send = suprabackup.scripts.send:main',
