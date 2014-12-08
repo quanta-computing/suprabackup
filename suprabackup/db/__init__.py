@@ -9,7 +9,9 @@ from sqlalchemy.orm import sessionmaker
 from .. import models
 from ..models.base import Model
 
+
 Session = sessionmaker()
+
 
 def get_engine(engine, host, db, user, password=''):
     """
