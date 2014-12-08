@@ -2,6 +2,8 @@
 This module contains all job-related classes and helpers
 
 """
+import datetime
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import Integer, SmallInteger, String, DateTime
 
@@ -18,6 +20,7 @@ class JobStatus:
     DONE = 2
     VERIFIED = 3
     FAILED = 4
+    PURGED = 5
 
     @classmethod
     def is_valid(klass, status=0):
@@ -51,13 +54,28 @@ class Job(Model):
     end_time = Column(DateTime)
 
 
+    @property
+    def expired(self):
+        """
+        Returns True if the job has expired, False else
+        This can be known by looking at the schedule attached to the Host
+        attached to this job
+
+        """
+        now = datetime.datetime.now()
+        if self.type == Job.LONG:
+            interval = datetime.timedelta(hours=self.host.schedule.long_retention)
+        else:
+            interval = datetime.timedelta(hours=self.host.schedule.short_retention)
+        expires = self.end_time + interval
+        return now > expires
+
+
     def end(self, end_time=None):
         """
         Ends the job and set the different parameters accordingly
 
         """
-        import datetime
-
         self.status = JobStatus.DONE
         if not end_time:
             end_time = datetime.datetime.now()
