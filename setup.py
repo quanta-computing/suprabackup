@@ -40,5 +40,13 @@ setup(name='suprabackup',
           'Topic :: System :: Archiving :: Backup',
       ],
       packages=['suprabackup'],
+      entry_points = {
+        'console_scripts': [
+            'suprabackup-send = suprabackup.scripts.send:main',
+            'suprabackup-receive = suprabackup.scripts.receive:main',
+            'suprabackup-verify = suprabackup.scripts.verify:main',
+            'suprabackup-purge = suprabackup.scripts.purge:main',
+        ],
+      },
       install_requires=requirements(),
   )
