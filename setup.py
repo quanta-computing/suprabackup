@@ -14,6 +14,7 @@ def readme():
     with open('README.md') as r:
         return r.read()
 
+
 def requirements():
     """
     Fetch requirements from requirements.txt
@@ -23,9 +24,9 @@ def requirements():
         return req.read().splitlines()
 
 
-setup(name='Suprabackup',
+setup(name='suprabackup',
       version='0.1',
-      description='Suprabackup is a tool to automate xtrabackup db backups',
+      description='Suprabackup is a tool to automate xtrabackup database backups',
       long_description=readme(),
       license='MIT',
       url='https://github.com/quanta-computing/suprabackup',
