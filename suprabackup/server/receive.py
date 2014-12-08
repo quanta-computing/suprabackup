@@ -6,7 +6,7 @@ import sys
 import os
 import datetime
 
-from suprabackup.models import Host
+from ..models import Host
 
 
 class SupraReceive:
@@ -39,6 +39,7 @@ class SupraReceive:
         path = self.build_backup_path(self.create_host_backup_dir(host), start)
         job = host.new_job(start, path)
         self.session.add(job)
+        self.session.commit()
         self.pipe_upload(path)
         job.end()
 
