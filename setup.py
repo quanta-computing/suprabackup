@@ -25,7 +25,7 @@ def requirements():
 
 
 setup(name='suprabackup',
-      version='0.1',
+      version='0.1.1',
       description='Suprabackup is a tool to automate xtrabackup database backups',
       long_description=readme(),
       license='MIT',
