@@ -34,6 +34,7 @@ class SupraReceive:
         This is the main method of SupraReceive
 
         """
+        self.logger.debug("Receiving backup from {}".format(ip))
         host = self.get_host(ip)
         start = datetime.datetime.now()
         path = self.build_backup_path(self.create_host_backup_dir(host), start)
@@ -41,7 +42,9 @@ class SupraReceive:
         self.session.add(job)
         self.session.commit()
         self.pipe_upload(path)
+        self.logger.debug("Upload ended for host {}".format(host.name))
         job.end()
+        self.logger.debug("Backup received for host".format(host.name))
 
 
     def get_host(self, ip):

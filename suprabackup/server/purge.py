@@ -28,6 +28,7 @@ class SupraPurge:
         """
         import os
 
+        self.logger.debug("Starting purge")
         for job in self.session.query(Job).all():
             if job.expired:
                 try:
@@ -39,6 +40,7 @@ class SupraPurge:
                                         .format(job.file_path, job.id))
                 finally:
                     job.status = JobStatus.PURGED
+        self.logger.debug("Ending purge")
 
 
 def purge_backups(config, logger, session):
