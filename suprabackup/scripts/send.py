@@ -41,6 +41,7 @@ def send_backup(host):
     Executes innobackupex and pipe it trough gzip and ssh
 
     """
+    null = open('/dev/null', 'w')
     ssh_host = host
     ssh_key = []
     if opts.user:
@@ -48,17 +49,22 @@ def send_backup(host):
     if opts.ssh_key:
         ssh_key = ['-i', opts.ssh_key]
     ssh = subprocess.Popen(['ssh', ssh_host] + ssh_key,
-                           stdin=subprocess.PIPE)
+                           stdin=subprocess.PIPE,
+                           stdout=null,
+                           stderr=null)
     gzip = subprocess.Popen(['gzip', '-q', '-c', '-'],
                             stdin=subprocess.PIPE,
-                            stdout=ssh.stdin)
+                            stdout=ssh.stdin,
+                            stderr=null)
     xtrabackup = subprocess.Popen(['innobackupex', '--stream=tar', '/tmp'],
-                                  stdout=gzip.stdin)
+                                  stdout=gzip.stdin,
+                                  stderr=null)
     xtrabackup.wait()
     gzip.stdin.close()
     gzip.wait()
     ssh.stdin.close()
     ssh.wait()
+    sys.exit(gzip.returncode + ssh.returncode + xtrabackup.returncode)
 
 
 if __name__ == "__main__":
