@@ -103,7 +103,7 @@ class SupraReceive:
             while 42:
                 data = sys.stdin.read(bs)
                 f.write(data)
-                if len(data) <= bs:
+                if len(data) < bs:
                     break
 
 
