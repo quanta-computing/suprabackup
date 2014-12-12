@@ -47,9 +47,9 @@ def main():
     if opts.path:
         overrides['base_path'] = opts.path
     if opts.config:
-        config = load_config(role='receive', overrides=overrides, path=opts.config)
+        config = load_config(role='verify', overrides=overrides, path=opts.config)
     else:
-        config = load_config(role='receive', overrides=overrides)
+        config = load_config(role='verify', overrides=overrides)
     logger.debug("Loaded configuration file {}".format(config.file))
     session = db.connect_with_config(config, logger)
     if not session:

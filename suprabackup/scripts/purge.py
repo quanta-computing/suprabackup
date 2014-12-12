@@ -42,9 +42,9 @@ def main():
     opts = parser.parse_args()
     logger = setup_logging('suprabackup-purge', verbose=opts.verbose, debug=opts.debug)
     if opts.config:
-        config = load_config(role='receive', path=opts.config)
+        config = load_config(role='purge', path=opts.config)
     else:
-        config = load_config(role='receive')
+        config = load_config(role='purge')
     logger.debug("Loaded configuration file {}".format(config.file))
     session = db.connect_with_config(config, logger)
     if not session:
