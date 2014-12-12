@@ -15,7 +15,7 @@ def purge_database(session, logger, older_than=0):
     import datetime
 
     now = datetime.datetime.now()
-    max_date = now - datetime.timedelta(hours=older_than)
+    max_date = now - datetime.timedelta(hours=int(older_than))
     jobs = session.query(Job).filter(Job.status == JobStatus.PURGED, Job.end_time < max_date)
     count = jobs.count()
     for job in jobs.all():
