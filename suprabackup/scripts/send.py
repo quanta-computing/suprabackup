@@ -7,6 +7,9 @@ This script runs xtrabackup and pipe the output to <hostname>
 
 
 """
+import os
+import sys
+
 import subprocess
 import argparse
 
