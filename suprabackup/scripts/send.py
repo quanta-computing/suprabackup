@@ -56,8 +56,10 @@ def send_backup(host):
                                   stdout=gzip.stdin)
     pids = [gzip.pid, xtrabackup.pid, ssh.pid]
     status = 0
-    while len(pids):
+    while len(pids) > 0:
+        print "Waiting for pids [{}] to exit".format(pids)
         pid, ret = os.wait()
+        print "PID {} exited with status {}".format(pid, ret)
         pids.remove(pid)
         status += ret
     sys.exit(status)
