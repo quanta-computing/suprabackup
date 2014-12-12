@@ -51,9 +51,13 @@ def send_backup(host):
                             stdout=ssh.stdin)
     xtrabackup = subprocess.Popen(['innobackupex', '--stream=tar', '/tmp'],
                                   stdout=gzip.stdin)
-    xtrabackup.communicate()
-    gzip.wait()
-    ssh.wait()
+    pids = [gzip.pid, xtrabackup.pid, ssh.pid]
+    status = 0
+    while len(pids):
+        pid, ret = os.wait()
+        pids.remove(pid)
+        status += ret
+    sys.exit(status)
 
 
 if __name__ == "__main__":
