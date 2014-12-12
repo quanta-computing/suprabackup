@@ -11,6 +11,7 @@ __defaults__ = {
         'read_size': 32768,
         'database': {},
     },
+    'shell': {},
     'verify': {},
     'purge': {},
 }
