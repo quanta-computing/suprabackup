@@ -105,6 +105,7 @@ class SupraReceive:
                 f.write(data)
                 if len(data) < bs:
                     break
+            sys.stdin.close()
 
 
 def receive_backup(config, logger, session, ip):
