@@ -52,7 +52,7 @@ def connect_with_config(config, logger=None):
                           password=config['database'].get('password', ''),
                          )
         if logger:
-            logger.debug("Successfully connected to databse {}"
+            logger.debug("Successfully connected to database {}"
                          .format(config['database']['db']))
         return session
     except KeyError as e:
