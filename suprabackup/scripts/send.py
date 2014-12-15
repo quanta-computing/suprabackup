@@ -30,7 +30,7 @@ def main():
         )
     parser.add_argument('-u', '--user', help='Specifies the remote user to use for SSH auth')
     parser.add_argument('-k', '--ssh-key', help='Specified a custom ssh key to use')
-    parser.add_argument('-d', '--debug', action='store_true', help='Switch to loglevel DEBUG')
+    parser.add_argument('-d', '--debug', action='store_true', help='Show the stdout/stderr of the processes')
     parser.add_argument('host', help='The remote hostname or IP address')
     opts = parser.parse_args()
     send_backup(opts.host)
@@ -41,7 +41,9 @@ def send_backup(host):
     Executes innobackupex and pipe it trough gzip and ssh
 
     """
-    null = open('/dev/null', 'w')
+    null = None
+    if not opts.debug:
+        null = open('/dev/null', 'w')
     ssh_host = host
     ssh_key = []
     if opts.user:
