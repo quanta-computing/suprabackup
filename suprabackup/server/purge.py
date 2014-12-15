@@ -29,15 +29,15 @@ class SupraPurge:
         import os
 
         self.logger.debug("Starting purge")
-        for job in self.session.query(Job).all():
+        for job in self.session.query(Job).filter(Job.status >= JobStatus.IN_PROGRESS):
             if job.expired:
                 try:
                     os.remove(job.file_path)
-                    self.logger.info("Job {} purged: file {} removed"
-                                     .format(job.id, job.file_path))
+                    self.logger.info("Job {} (host {}) purged: file {} removed"
+                                     .format(job.id, job.host.name, job.file_path))
                 except OSError as e:
-                    self.logger.warning("Cannot remove file {} for job id {}"
-                                        .format(job.file_path, job.id))
+                    self.logger.warning("Cannot remove file {} for job id {} (host {})"
+                                        .format(job.file_path, job.id, job.host.name))
                 finally:
                     job.status = JobStatus.PURGED
         self.logger.debug("Ending purge")
