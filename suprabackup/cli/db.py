@@ -3,6 +3,7 @@ Contains database task utilities for CLI
 
 """
 
+from ..db import Model
 from ..models import Job, JobStatus
 
 def purge_database(session, logger, older_than=0):
@@ -22,3 +23,13 @@ def purge_database(session, logger, older_than=0):
         session.delete(job)
         logger.debug("Job {} purged from database".format(job.id))
     logger.info("Database purged: {} jobs removed".format(count))
+
+
+def create_tables(session, logger):
+    """
+    Create the table needed for suprabackup in database
+    Should be run once only
+
+    """
+    Model.metadata.create_all(session.get_bind())
+    logger.info("Tables created in database")

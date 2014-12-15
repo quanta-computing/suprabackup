@@ -9,7 +9,7 @@ from ..models import *
 
 from .host import create_host, delete_host, list_hosts
 from .schedule import create_schedule, delete_schedule, list_schedules
-from .db import purge_database
+from .db import purge_database, create_tables
 
 
 __motd__ = """
@@ -37,6 +37,7 @@ __cmds__ = {
     'delete_schedule': delete_schedule,
     'list_schedules': list_schedules,
     'purge_database': purge_database,
+    'create_tables': create_tables,
 }
 
 
