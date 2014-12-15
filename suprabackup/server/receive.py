@@ -34,17 +34,18 @@ class SupraReceive:
         This is the main method of SupraReceive
 
         """
-        self.logger.debug("Receiving backup from {}".format(ip))
+        self.logger.info("Receiving backup from {}".format(ip))
         host = self.get_host(ip)
         start = datetime.datetime.now()
         path = self.build_backup_path(self.create_host_backup_dir(host), start)
         job = host.new_job(start, path)
         self.session.add(job)
         self.session.commit()
+        self.logger.debug("Starting upload for host {} (Job id {})".format(host.name, job.id))
         self.pipe_upload(path)
-        self.logger.debug("Upload ended for host {}".format(host.name))
+        self.logger.debug("Upload ended for host {} (Job id {})".format(host.name, job.id))
         job.end()
-        self.logger.debug("Backup received for host".format(host.name))
+        self.logger.info("Backup received for host {} (Job id {})".format(host.name, job.id))
 
 
     def get_host(self, ip):
@@ -98,7 +99,7 @@ class SupraReceive:
 
         """
         with open(filename, 'wb') as f:
-            self.logger.info("Uploading backup into {0}".format(filename))
+            self.logger.debug("Uploading backup into {0}".format(filename))
             bs = self.config['read_size']
             while 42:
                 data = sys.stdin.read(bs)

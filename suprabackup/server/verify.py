@@ -28,17 +28,17 @@ class SupraVerify:
         Updates the job status accordingly
 
         """
-        self.logger.debug("Started verify jobs")
+        self.logger.debug("Started verify")
         for job in self.session.query(Job).filter(Job.status == JobStatus.DONE):
             if self.check_file(job.file_path):
-                self.logger.info("Last backup for host {0} is OK"
-                                 .format(job.host.name))
+                self.logger.info("Job {} for host {} is OK"
+                                 .format(job.id, job.host.name))
                 job.status = JobStatus.VERIFIED
             else:
-                self.logger.warning("Last backup for host {0} is NOT OK"
-                                    .format(job.host.name))
+                self.logger.warning("Job {} for host {} is NOT OK"
+                                    .format(job.id, job.host.name))
                 job.status = JobStatus.FAILED
-        self.logger.debug("Ended verify jobs")
+        self.logger.debug("Ended verify")
 
 
     def check_file(self, path):
