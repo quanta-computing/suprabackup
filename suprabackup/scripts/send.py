@@ -30,7 +30,10 @@ def main():
         )
     parser.add_argument('-u', '--user', help='Specifies the remote user to use for SSH auth')
     parser.add_argument('-k', '--ssh-key', help='Specified a custom ssh key to use')
-    parser.add_argument('-d', '--debug', action='store_true', help='Show the stdout/stderr of the processes')
+    parser.add_argument('-t', '--type', help='The type of the backup to perform',
+                        choices=['mysql', 'mongo'], default='mysql')
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='Show the stdout/stderr of the processes')
     parser.add_argument('host', help='The remote hostname or IP address')
     opts = parser.parse_args()
     send_backup(opts.host)
@@ -58,9 +61,11 @@ def send_backup(host):
                             stdin=subprocess.PIPE,
                             stdout=ssh.stdin,
                             stderr=null)
-    xtrabackup = subprocess.Popen(['innobackupex', '--stream=tar', '/tmp'],
-                                  stdout=gzip.stdin,
-                                  stderr=null)
+    if opts.type == 'mysql':
+        command = ['innobackupex', '--stream=tar', '/tmp']
+    else:
+        command = ['mongodump', '--archive']
+    xtrabackup = subprocess.Popen(command, stdout=gzip.stdin, stderr=null)
     xtrabackup.wait()
     gzip.stdin.close()
     gzip.wait()
