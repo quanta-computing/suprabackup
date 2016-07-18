@@ -26,7 +26,7 @@ def requirements():
 
 
 setup(name='suprabackup',
-      version='0.3.0',
+      version='0.3.1',
       description='Suprabackup is a tool to automate xtrabackup database backups',
       long_description=readme(),
       license='MIT',
@@ -41,7 +41,7 @@ setup(name='suprabackup',
           'Topic :: System :: Archiving :: Backup',
       ],
       packages=find_packages(),
-      entry_points = {
+      entry_points={
         'console_scripts': [
             'suprabackup-send = suprabackup.scripts.send:main',
             'suprabackup-receive = suprabackup.scripts.receive:main',
@@ -50,5 +50,4 @@ setup(name='suprabackup',
             'suprashell = suprabackup.scripts.shell:main'
         ],
       },
-      install_requires=requirements(),
-  )
+      install_requires=requirements())
