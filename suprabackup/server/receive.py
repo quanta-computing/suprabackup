@@ -17,7 +17,6 @@ class SupraReceive:
     """
     FILE_FMT = '{}-{}.tar.gz'
 
-
     def __init__(self, config, logger, session):
         """
         Sets up SupraReceive with given config/logger and db connection
@@ -26,7 +25,6 @@ class SupraReceive:
         self.config = config
         self.logger = logger
         self.session = session
-
 
     def receive(self, ip):
         """
@@ -47,19 +45,17 @@ class SupraReceive:
         job.end()
         self.logger.info("Backup received for host {} (Job id {})".format(host.name, job.id))
 
-
     def get_host(self, ip):
         """
         Retrieves an Host ORM mapping from an IP address
 
         """
         try:
-            return self.session.query(Host).filter(Host.ip==ip).one()
+            return self.session.query(Host).filter(Host.ip == ip).one()
         except Exception as e:
             self.logger.critical("Cannot find client hostname for IP {}: {}"
                                  .format(ip, e))
             sys.exit(1)
-
 
     def build_backup_path(self, host_path, start):
         """
@@ -71,7 +67,6 @@ class SupraReceive:
         prefix = self.config['file_prefix']
         f = self.FILE_FMT.format(prefix, start.strftime("%Y-%m-%d_%H-%M"))
         return os.path.join(host_path, f)
-
 
     def create_host_backup_dir(self, host):
         """
@@ -91,7 +86,6 @@ class SupraReceive:
             self.logger.critical("Cannot make directory {0}: [{1}] {2}"
                                  .format(path, e.errno, e.strerror))
             sys.exit(1)
-
 
     def pipe_upload(self, filename):
         """

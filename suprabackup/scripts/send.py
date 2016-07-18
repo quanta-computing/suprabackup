@@ -29,7 +29,8 @@ def main():
         epilog='Copyright Quanta-computing 2014',
         )
     parser.add_argument('-u', '--user', help='Specifies the remote user to use for SSH auth')
-    parser.add_argument('-k', '--ssh-key', help='Specified a custom ssh key to use')
+    parser.add_argument('-k', '--ssh-key', help='Specifies a custom ssh key to use')
+    parser.add_argument('-p', '--ssh-port', help='Specifies a custom ssh port to use')
     parser.add_argument('-t', '--type', help='The type of the backup to perform',
                         choices=['mysql', 'mongo'], default='mysql')
     parser.add_argument('-d', '--debug', action='store_true',
@@ -48,12 +49,15 @@ def send_backup(host):
     if not opts.debug:
         null = open('/dev/null', 'w')
     ssh_host = host
+    ssh_port = []
     ssh_key = []
     if opts.user:
         ssh_host = "{}@{}".format(opts.user, ssh_host)
+    if opts.ssh_port:
+        ssh_port = ['-p', opts.ssh_port]
     if opts.ssh_key:
         ssh_key = ['-i', opts.ssh_key]
-    ssh = subprocess.Popen(['ssh', ssh_host] + ssh_key,
+    ssh = subprocess.Popen(['ssh', ssh_host] + ssh_port + ssh_key,
                            stdin=subprocess.PIPE,
                            stdout=null,
                            stderr=null)
@@ -63,8 +67,10 @@ def send_backup(host):
                             stderr=null)
     if opts.type == 'mysql':
         command = ['innobackupex', '--stream=tar', '/tmp']
-    else:
+    elif opts.type == 'mongo':
         command = ['mongodump', '--archive']
+    else:
+        sys.exit(2)
     xtrabackup = subprocess.Popen(command, stdout=gzip.stdin, stderr=null)
     xtrabackup.wait()
     gzip.stdin.close()

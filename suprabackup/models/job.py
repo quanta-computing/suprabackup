@@ -33,7 +33,6 @@ class JobStatus:
         return False
 
 
-
 class Job(Model):
     """
     This is the ORM mapping for a single backup job
@@ -53,7 +52,6 @@ class Job(Model):
     start_time = Column(DateTime)
     end_time = Column(DateTime)
 
-
     @property
     def expired(self):
         """
@@ -69,7 +67,6 @@ class Job(Model):
             interval = datetime.timedelta(hours=self.host.schedule.short_retention)
         expires = self.end_time + interval
         return now > expires
-
 
     def end(self, end_time=None):
         """
