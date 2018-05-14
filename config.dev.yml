@@ -1,0 +1,8 @@
+base_path: /tmp/suprabackup
+
+database:
+  engine: mysql+mysqlconnector
+  host: localhost
+  db: suprabackup
+  user: suprabackup
+  password: suprabackup42

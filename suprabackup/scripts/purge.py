@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 Usage: suprabackup_purge.py
 Author: Matthieu 'Korrigan' Rosinski <mro@quanta-computing.com>

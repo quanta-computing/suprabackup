@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 Usage: xtrabackup_send.py <hostname>
 Author: Matthieu 'Korrigan' Rosinski <mro@quanta-computing.com>
@@ -28,13 +28,23 @@ def main():
         description='This program is a wrapper for sending xtrabackup to a target over SSH',
         epilog='Copyright Quanta-computing 2014',
         )
-    parser.add_argument('-u', '--user', help='Specifies the remote user to use for SSH auth')
-    parser.add_argument('-k', '--ssh-key', help='Specifies a custom ssh key to use')
-    parser.add_argument('-p', '--ssh-port', help='Specifies a custom ssh port to use')
-    parser.add_argument('-t', '--type', help='The type of the backup to perform',
-                        choices=['mysql', 'mongo'], default='mysql')
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='Show the stdout/stderr of the processes')
+    parser.add_argument(
+        '-u', '--user',
+        help='Specifies the remote user to use for SSH auth')
+    parser.add_argument(
+        '-k', '--ssh-key',
+        help='Specifies a custom ssh key to use')
+    parser.add_argument(
+        '-p', '--ssh-port', help='Specifies a custom ssh port to use')
+    parser.add_argument(
+        '-c', '--cleartext', action='store_true',
+        help='Send the backup over cleartext instead of using SSH')
+    parser.add_argument(
+        '-t', '--type', help='The type of the backup to perform',
+        choices=['mysql', 'mongo'], default='mysql')
+    parser.add_argument(
+        '-d', '--debug', action='store_true',
+        help='Show the stdout/stderr of the processes')
     parser.add_argument('host', help='The remote hostname or IP address')
     opts = parser.parse_args()
     send_backup(opts.host)
@@ -57,10 +67,17 @@ def send_backup(host):
         ssh_port = ['-p', opts.ssh_port]
     if opts.ssh_key:
         ssh_key = ['-i', opts.ssh_key]
-    ssh = subprocess.Popen(['ssh', ssh_host] + ssh_port + ssh_key,
-                           stdin=subprocess.PIPE,
-                           stdout=null,
-                           stderr=null)
+    ssh = None
+    if opts.cleartext:
+        ssh = subprocess.Popen(['nc', host, opts.ssh_port],
+                               stdin=subprocess.PIPE,
+                               stdout=null,
+                               stderr=null)
+    else:
+        ssh = subprocess.Popen(['ssh', ssh_host] + ssh_port + ssh_key,
+                               stdin=subprocess.PIPE,
+                               stdout=null,
+                               stderr=null)
     gzip = subprocess.Popen(['gzip', '-q', '-c', '-'],
                             stdin=subprocess.PIPE,
                             stdout=ssh.stdin,

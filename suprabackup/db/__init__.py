@@ -2,6 +2,8 @@
 This module handles database connections for suprabackup
 
 """
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -19,7 +21,8 @@ def get_engine(engine, host, db, user, password=''):
 
     """
     user_string = "{}:{}".format(user, password)
-    return create_engine('{}://{}@{}/{}'.format(engine, user_string, host, db))
+    return create_engine(
+        '{}://{}@{}/{}'.format(engine, user_string, host, db))
 
 
 def connect_engine(engine):
@@ -66,3 +69,24 @@ def connect_with_config(config, logger=None):
                                  config['database']['host'],
                                  e))
     return None
+
+
+@contextmanager
+def within_session(config, logger=None):
+    """
+    A context manager to handle a database session with auto commit/cleanup
+
+    """
+    session = connect_with_config(config, logger)
+    if not session:
+        self.logger.error("Cannot establish DB connection, exiting")
+        # This is a bit harsh but will be the wanted behaviour in all our cases
+        sys.exit(1)
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()

@@ -52,7 +52,7 @@ class Host(Model):
             start_time = datetime.datetime.now()
         last_long = self.last_long_job
         job = Job(host=self, start_time=start_time, file_path=path)
-        if not last_long:
+        if not last_long or last_long.end_time is None:
             job.type = Job.LONG
         else:
             next_long = last_long.end_time
