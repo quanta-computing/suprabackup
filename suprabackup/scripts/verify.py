@@ -12,7 +12,7 @@ import sys
 from suprabackup import db
 from suprabackup.logging import setup_logging
 from suprabackup.config import load_config
-from suprabackup.server import verify_backups
+from suprabackup.server import verify_backups, verify_job
 
 
 logger = None
@@ -41,6 +41,8 @@ def main():
                         help='Where to store the backups')
     parser.add_argument('-r', '--remove', action='store_true',
                         help='Remove failed backup files')
+    parser.add_argument('-j', '--job', type=int,
+                        help='Force verify specified job ids')
     opts = parser.parse_args()
     overrides = {}
     logger = setup_logging('suprabackup-verify', verbose=opts.verbose, debug=opts.debug)
@@ -51,12 +53,10 @@ def main():
     else:
         config = load_config(role='verify', overrides=overrides)
     logger.debug("Loaded configuration file {}".format(config.file))
-    session = db.connect_with_config(config, logger)
-    if not session:
-        sys.exit(1)
-    verify_backups(config, logger, session)
-    session.commit()
-    session.close()
+    if opts.job is not None:
+        verify_job(config, logger, opts.job)
+    else:
+        verify_backups(config, logger)
 
 
 if __name__ == "__main__":

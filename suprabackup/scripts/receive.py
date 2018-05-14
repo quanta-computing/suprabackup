@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 Usage: suprabackup_receive.py
 Author: Matthieu 'Korrigan' Rosinski <mro@quanta-computing.com>
 
-This script is a wrapper to handle xtrabackup uploads for Percona server backups
+This script is a wrapper to handle xtrabackup uploads for Percona server
+backups
 
 """
 import os
@@ -33,7 +34,7 @@ def main():
     global config
 
     parser = argparse.ArgumentParser(
-        description='This program is a wraper for receiving Xtrabackup uploads and storing them',
+        description='This is a wrapper for receiving Xtrabackup uploads',
         epilog='Copyright Quanta 2014')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Switch to loglevel DEBUG')
@@ -45,21 +46,18 @@ def main():
                         help='Where to store the backups')
     opts = parser.parse_args()
     overrides = {}
-    logger = setup_logging('suprabackup-receive', verbose=opts.verbose, debug=opts.debug)
+    logger = setup_logging(
+        'suprabackup-receive', verbose=opts.verbose, debug=opts.debug)
     if opts.path:
         overrides['base_path'] = opts.path
     if opts.config:
-        config = load_config(role='receive', overrides=overrides, path=opts.config)
+        config = load_config(
+            role='receive', overrides=overrides, path=opts.config)
     else:
         config = load_config(role='receive', overrides=overrides)
     logger.debug("Loaded configuration file {}".format(config.file))
     ip = get_client_ip()
-    session = db.connect_with_config(config, logger)
-    if not session:
-        sys.exit(1)
-    receive_backup(config, logger, session, ip)
-    session.commit()
-    session.close()
+    receive_backup(config, logger, ip)
 
 
 def get_client_ip():
